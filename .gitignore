@@ -1,0 +1,85 @@
+# --- Node.js dependencies ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# --- Electron build output ---
+dist/
+build/
+out/
+release/
+*.asar
+*.dmg
+*.exe
+*.msi
+*.zip
+*.tar.gz
+
+# --- Electron Forge / Builder cache ---
+.electron/
+.electron-builder/
+.electron-forge/
+electron-builder.yml
+
+# --- Logs and temp files ---
+logs/
+*.log
+*.csv
+*.pid
+*.seed
+*.pid.lock
+temp/
+tmp/
+
+# --- Environment files ---
+.env
+.env.*.local
+!.env.example
+
+# --- Coverage / testing ---
+coverage/
+.nyc_output/
+jest-cache/
+jest-html-reporters-*
+test-results/
+
+# --- OS-specific files ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+# Linux
+*~
+
+# --- IDE / Editor folders ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Misc cache / backups ---
+*.bak
+*.swp
+*.swo
+*.orig
+*.tmp
+.cache/
+.parcel-cache/
+webpack-cache/
+.eslintcache
+
+# --- Optional: TypeScript output ---
+dist-ts/
+*.tsbuildinfo
+
+# --- Optional: Electron auto-update data ---
+pending/
+update.json

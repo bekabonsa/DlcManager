@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>DLC Manager (Electron)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>DLC Manager</h1>
+    <div id="file-info">
+      <button id="choose-file">Open INI</button>
+      <span id="filepath">(no file)</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="steam-section">
+      <h2>Steam</h2>
+      <div class="steam-grid">
+        <div>
+          <label>AppID</label>
+          <input id="appid" readonly>
+        </div>
+        <div>
+          <label>unlockall</label>
+          <div class="toggle-row">
+            <input id="unlockall" type="checkbox">
+            <button id="save-unlock">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dlc-section">
+      <h2>DLC</h2>
+      <input id="search" placeholder="Filter by id or name...">
+      <table id="dlc-table">
+        <thead>
+          <tr><th>ID</th><th>Name</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="add-row">
+        <input id="new-id" placeholder="DLC ID">
+        <input id="new-name" placeholder="DLC Name">
+        <button id="add-btn">Add</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

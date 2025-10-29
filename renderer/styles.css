@@ -1,6 +1,11 @@
 /* =============== */
 /* Global Theme    */
 /* =============== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { overflow-x: hidden; }
 
 :root {
   --bg-gradient-start: #0d1117;
@@ -117,16 +122,26 @@ h1::after {
 /* =============== */
 
 main {
-  flex: 1;
+  /* existing */
   width: 100%;
   max-width: 1200px;
   padding: 24px;
   margin: 0 auto;
+
+  /* grid layout you already use */
   display: grid;
-  grid-template-columns: minmax(280px, 360px) 1fr;
-  grid-gap: 24px;
-  box-sizing: border-box;
+  grid-template-columns: 300px 1fr;
+  grid-template-areas:
+    "steam discover"
+    "steam dlc";
+  gap: 24px;
+
+  /* new: vertical centering */
+  min-height: calc(100vh - var(--header-height) - 48px); /* header + padding */
+  align-content: center;   /* vertical centering of the grid */
+  justify-content: center; /* horizontal centering of the grid */
 }
+
 
 /* Left column panels = steam info */
 .steam-section {
@@ -138,6 +153,7 @@ main {
   display: flex;
   flex-direction: column;
   position: relative;
+  grid-area: steam;
 }
 
 .steam-section h2 {
@@ -212,7 +228,14 @@ input[readonly] {
   position: relative;
   min-width: 0; /* supports flex shrink */
   display: flex;
-  flex-direction: column;
+  flex-direction: column;#search {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+  grid-area: dlc;
+  overflow: hidden;
 }
 
 .dlc-section h2 {
@@ -249,7 +272,12 @@ input[readonly] {
   outline: none;
   margin-bottom: 16px;
   transition: border-color .12s ease, box-shadow .12s ease;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
+
 
 #search:focus {
   border-color: var(--input-border-hover);
@@ -337,23 +365,25 @@ input[readonly] {
 /* ID column fixed width */
 #dlc-table th:nth-child(1),
 #dlc-table td:nth-child(1) {
-  width: 140px;
+  width: 120px;
   white-space: nowrap;
 }
 
-/* NAME column truncates nicely */
 #dlc-table th:nth-child(2),
 #dlc-table td:nth-child(2) {
   width: auto;
+  min-width: 220px;        /* keeps text from collapsing vertically */
+  white-space: normal;     /* allow normal word wrapping */
+  word-break: break-word;  /* wrap long words if needed */
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; /* if you want truncation instead of wrapping */
 }
 
 #dlc-table th:nth-child(3),
 #dlc-table td:nth-child(3) {
-  width: 110px;               /* was 1%; give it a real size */
+  width: 110px;
+  text-align: right;
   white-space: nowrap;
-  text-align: right;          /* visually anchors the button */
 }
 
 
@@ -489,6 +519,75 @@ button.danger:hover {
   cursor: pointer;
 }
 
+
+
+
+/* -----------------DISCOVER STEAM DLCS STYLING-------------- */
+
+.discover-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--surface-radius-lg);
+  box-shadow: var(--panel-shadow);
+  padding: 20px 20px 16px;
+  grid-area: discover;
+}
+
+.discover-section h2 {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  display: flex; align-items: center; gap: 6px;
+}
+.discover-section h2::before {
+  content: ""; width: 6px; height: 6px; border-radius: 999px;
+  background: var(--accent); box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.discover-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+}
+.discover-grid .row { display: flex; gap: 10px; align-items: center; }
+.discover-grid input { flex: 1; }
+
+#discover-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid var(--table-border);
+  border-radius: var(--surface-radius-md);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  table-layout: fixed;
+}
+#discover-table thead th {
+  background: rgba(15,23,42,0.6);
+  color: var(--text-dim);
+  font-weight: 500;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--table-border);
+  font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+}
+#discover-table tbody tr:nth-child(odd){ background: var(--table-row-bg-odd); }
+#discover-table tbody tr:nth-child(even){ background: var(--table-row-bg-even); }
+#discover-table tbody tr:hover{ background: var(--table-row-bg-hover); }
+#discover-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--table-border);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#discover-table th:nth-child(1), #discover-table td:nth-child(1) { width: 140px; }
+#discover-table th:nth-child(3), #discover-table td:nth-child(3) { width: 120px; }
+#discover-table th:nth-child(4), #discover-table td:nth-child(4) { width: 100px; }
+#discover-table th:last-child, #discover-table td:last-child { width: 110px; text-align: right; }
+@media (max-width: 900px) { .discover-grid { grid-template-columns: 1fr; } }
+
+/* --------------------DISCOVER STEAM DLCS STYLING END ---------------*/
+
 /* =============== */
 /* Responsive      */
 /* =============== */
@@ -496,5 +595,10 @@ button.danger:hover {
 @media (max-width: 900px) {
   main {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "steam"
+      "discover"
+      "dlc";
+    align-content: start;  /* natural flow on small screens */
   }
 }

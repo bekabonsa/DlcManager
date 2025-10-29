@@ -5,11 +5,22 @@ const appidInput = document.getElementById('appid');
 const unlockCheckbox = document.getElementById('unlockall');
 const saveUnlockBtn = document.getElementById('save-unlock');
 
+
+// DLC Table elements
 const dlcTbody = document.querySelector('#dlc-table tbody');
 const addBtn = document.getElementById('add-btn');
 const newId = document.getElementById('new-id');
 const newName = document.getElementById('new-name');
 const search = document.getElementById('search');
+
+
+// Discover DLC elements
+const discoverAppId = document.getElementById('discover-appid');
+const discoverQuery = document.getElementById('discover-query');
+const btnDiscover = document.getElementById('btn-discover');
+const btnSearch = document.getElementById('btn-search');
+const discoverTbody = document.querySelector('#discover-table tbody');
+
 
 let currentConfig = null;
 
@@ -85,6 +96,66 @@ saveUnlockBtn.addEventListener('click', async () => {
 search.addEventListener('input', () => {
   if (currentConfig) renderDlc(currentConfig.dlc);
 });
+
+
+
+
+//---------------- STEAM DLC EVENT LISTENERS ----------------//
+btnDiscover.addEventListener('click', doDiscoverByAppId);
+btnSearch.addEventListener('click', doSearchByName);
+
+
+
+
+
+//---------------- DLC Discovery/Search ----------------//
+function renderDiscoverList(list) {
+  discoverTbody.innerHTML = '';
+  list.forEach(item => {
+    const tr = document.createElement('tr');
+
+    const tdId = document.createElement('td'); tdId.textContent = item.appid; tr.appendChild(tdId);
+    const tdName = document.createElement('td'); tdName.textContent = item.name; tr.appendChild(tdName);
+    const tdRel = document.createElement('td'); tdRel.textContent = item.release_date || ''; tr.appendChild(tdRel);
+    const tdPrice = document.createElement('td'); tdPrice.textContent = item.price || ''; tr.appendChild(tdPrice);
+
+    const tdAct = document.createElement('td');
+    const add = document.createElement('button');
+    add.textContent = 'Add';
+    add.onclick = async () => {
+      const res = await window.api.addDlc(item.appid, item.name);
+      if (!res.ok) return alert('Error: ' + res.error);
+      await loadConfig(); // refresh your local DLC table
+    };
+    tdAct.appendChild(add);
+    tr.appendChild(tdAct);
+
+    discoverTbody.appendChild(tr);
+  });
+}
+
+async function doDiscoverByAppId() {
+  const appid = (discoverAppId.value || '').trim();
+  if (!appid) return alert('Enter a base AppID');
+  discoverTbody.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
+  const res = await window.api.discoverDlcByAppId(appid);
+  if (!res.ok) return alert(res.error || 'Failed');
+  renderDiscoverList(res.list);
+}
+
+async function doSearchByName() {
+  const q = (discoverQuery.value || '').trim();
+  if (!q) return alert('Enter a search term');
+  discoverTbody.innerHTML = '<tr><td colspan="5">Searching…</td></tr>';
+  const res = await window.api.searchDlcByName(q);
+  if (!res.ok) return alert(res.error || 'Failed');
+  renderDiscoverList(res.list);
+}
+
+//---------------- DLC Discovery/Search END ----------------//
+
+
+
 
 // Load default file on start (if exists)
 loadConfig();
